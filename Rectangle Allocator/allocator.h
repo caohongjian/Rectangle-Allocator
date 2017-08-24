@@ -67,6 +67,11 @@ public:
 
 	TRectangleAllocator()
 	{
+		Clear();
+	}
+
+	void Clear()
+	{
 		uint32_t depthCount = 1;
 		uint32_t offset = 0;
 		uint32_t extent = TotalExtent;
@@ -207,13 +212,14 @@ public:
 		for (uint32_t level = 0; level < targetLevel; ++level)
 		{
 			relativePath[level + 1] = GetChildIndex(parent, paths[level]);
-			parent = paths[level + 1];
+			parent = relativePath[level + 1];
 		}
 
 		GetCapacity(targetLevel, parent).Init(targetLevel);
 
 		for (int level = targetLevel - 1; level >= 0; level--)
 		{
+			parent = GetParent(parent);
 			GetCapacity(level, parent).Update(level, &GetCapacity(level + 1, 0));
 		}
 	}
